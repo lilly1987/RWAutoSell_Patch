@@ -80,6 +80,8 @@
     <Compile Include="MyLog.cs" />
     <Compile Include="RWAutoSell_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RWAutoSell_PatchUI.cs" />
+    <Compile Include="RWAutoSell_Settings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 using Verse;
+using Verse.Noise;
 
 namespace Lilly
 {
@@ -16,6 +18,7 @@ namespace Lilly
         public static string harmonyId = "Lilly.RWAutoSell";
         public static Harmony harmony;
         public static bool onDebug = false;
+        public static bool ASAITog = true;
 
         static RWAutoSell_Patch() 
         {
@@ -36,6 +39,18 @@ namespace Lilly
                 }
                 MyLog.Warning($"Patch ED");
             }
+        }
+
+        public static void ExposeData()
+        {
+            Scribe_Values.Look(ref onDebug, "onDebug", false);
+            Scribe_Values.Look(ref ASAITog, "ASAITog", true);
+        }
+
+        public static void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
+        {
+            listing.CheckboxLabeled($"Debug", ref onDebug);
+            listing.CheckboxLabeled($"ASAITog", ref ASAITog);
         }
 
         public static List<IRule> ruleList = new List<IRule>();
@@ -68,11 +83,15 @@ namespace Lilly
         [HarmonyPatch(typeof(ASMapComp), nameof(ASMapComp.MapGenerated))]
         public static class Patch_MapGenerated
         {
+
             [HarmonyPostfix]
             public static void Postfix(ASMapComp __instance)
             {
                 MyLog.Warning($"MapGenerated ST", print: onDebug);
-
+                if (!__instance.map.IsPlayerHome)
+                {
+                    ASMod.GetSingleton.mapComps.Add(__instance);
+                }
                 try
                 {
                     MyLog.Warning($"map {__instance?.map}", print: onDebug);
@@ -83,6 +102,11 @@ namespace Lilly
                     {
                         MyLog.Error($"AddMap ASMapComp NULL");
                         return;
+                    }
+                    aSMapComp.ASAITog=true;
+                    foreach (Pawn pawn in __instance.map.mapPawns.FreeColonists)
+                    {
+                        aSMapComp.SelectedNegogiators.Add(pawn.ThingID);
                     }
                     if (Find.Maps.Count == 1)
                     {
@@ -113,8 +137,12 @@ namespace Lilly
         public static class MapRemoved
         {
             [HarmonyPrefix]
-            public static void Postfix(ASMapComp __instance)
+            public static void Prefix(ASMapComp __instance)
             {
+                if (!__instance.map.IsPlayerHome)
+                {
+                    ASMod.GetSingleton.mapComps.Remove(__instance);
+                }
                 try
                 {
                     MyLog.Warning($"MapRemoved ST", print: onDebug);
