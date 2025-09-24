@@ -41,10 +41,11 @@ namespace Lilly
             //MyHarmonyPatch("DeinitAndRemoveMapPatch", typeof(Game), "DeinitAndRemoveMap", prefix: "DeinitAndRemoveMapPatch");
             harmony.Patch("LoadGameFromSaveFileNow", typeof(SavedGameLoaderNow), "LoadGameFromSaveFileNow", patchType, postfix: "LoadGameFromSaveFileNowPatch");
             harmony.Patch("MapComponentTick", typeof(ASMapComp), "MapComponentTick", patchType, transpiler: "Transpiler1");
+            harmony.Patch("MainTabWindow_AutoSell", typeof(MainTabWindow_AutoSell), "InitDia", patchType, transpiler: "InitDiaTranspiler");
             harmony.Patch("MapGenerated", typeof(ASMapComp), "MapGenerated", patchType, postfix: "MapGeneratedPostfix", transpiler: "Transpiler1");
             harmony.Patch("MapRemoved", typeof(ASMapComp), "MapRemoved", patchType, prefix: "MapRemovedPrefix", transpiler: "Transpiler1");
             harmony.Patch("GetCount", typeof(FilterLowStack), "GetCount", patchType, transpiler: "Transpiler3", parameters: new Type[] { typeof(ThingDef), typeof(Map), typeof(bool) });
-            harmony.Patch("MapTradables", typeof(ASLibTransferUtility), "MapTradables", patchType, transpiler: "MapTradablesTranspiler", parameters: new Type[] {
+/*            harmony.Patch("MapTradables", typeof(ASLibTransferUtility), "MapTradables", patchType, transpiler: "MapTradablesTranspiler", parameters: new Type[] {
                 typeof(Map),
                 typeof(bool),
                 typeof(TransferAsOneMode),
@@ -52,7 +53,7 @@ namespace Lilly
                 typeof(bool),
                 typeof(bool),
                 typeof(bool)
-            });
+            });*/
 
             harmony.PatchAll();
 
@@ -72,6 +73,56 @@ namespace Lilly
             listing.CheckboxLabeled($"Debug", ref onDebug);
             listing.CheckboxLabeled($"ASAITog", ref ASAITog);
         }
+
+        public static IEnumerable<CodeInstruction> InitDiaTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            MyLog.Warning($"InitDiaTranspiler ST", print: onDebug, "00FF00FF");
+
+            var codes = new List<CodeInstruction>(instructions);
+            var newCodes = new List<CodeInstruction>();
+
+            for (int i = 0; i < codes.Count; i++)
+            {
+                // Faction 조건 제거 블록
+                if (i + 9 < codes.Count &&
+                    codes[i].opcode == OpCodes.Ldloc_S &&
+                    codes[i + 1].opcode == OpCodes.Callvirt &&
+                    codes[i + 1].operand is MethodInfo factionGetter1 &&
+                    factionGetter1.Name == "get_Faction" &&
+                    codes[i + 2].opcode == OpCodes.Brfalse_S &&
+                    codes[i + 3].opcode == OpCodes.Ldloc_S &&
+                    codes[i + 4].opcode == OpCodes.Callvirt &&
+                    codes[i + 4].operand is MethodInfo factionGetter2 &&
+                    factionGetter2.Name == "get_Faction" &&
+                    codes[i + 5].opcode == OpCodes.Callvirt &&
+                    codes[i + 5].operand is MethodInfo isPlayerGetter &&
+                    isPlayerGetter.Name == "get_IsPlayer" &&
+                    codes[i + 6].opcode == OpCodes.Brtrue_S &&
+                    codes[i + 7].opcode == OpCodes.Ldloc_S &&
+                    codes[i + 8].opcode == OpCodes.Callvirt &&
+                    codes[i + 8].operand is MethodInfo factionGetter3 &&
+                    factionGetter3.Name == "get_Faction" &&
+                    codes[i + 9].opcode == OpCodes.Brtrue_S)
+                {
+                    // 레이블 보존
+                    foreach (var label in codes[i].labels)
+                        codes[i + 10].labels.Add(label);
+
+                    MyLog.Warning($"InitDiaTranspiler Succ", print: onDebug, "00FF00FF");
+
+                    i += 9; // 조건 블록 전체 건너뜀
+                    continue;
+                }
+
+                newCodes.Add(codes[i]);
+            }
+
+
+            MyLog.Warning($"InitDiaTranspiler ED", print: onDebug, "00FF00FF");
+
+            return newCodes;
+        }
+
 
         public static IEnumerable<CodeInstruction> Transpiler1(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
