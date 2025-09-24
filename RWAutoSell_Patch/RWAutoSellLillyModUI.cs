@@ -12,13 +12,13 @@ using Verse;
 
 namespace Lilly
 {
-    public class RWAutoSell_PatchUI : Mod
+    public class RWAutoSellLillyModUI : Mod
     {
-        public static RWAutoSell_Settings settings;
+        public static RWAutoSellLillySettings settings;
 
-        public RWAutoSell_PatchUI(ModContentPack content) : base(content)
+        public RWAutoSellLillyModUI(ModContentPack content) : base(content)
         {
-            settings = GetSettings<RWAutoSell_Settings>();// 주의. MainSettings의 patch가 먼저 실행됨      
+            settings = GetSettings<RWAutoSellLillySettings>();// 주의. MainSettings의 patch가 먼저 실행됨      
         }
 
         Vector2 scrollPosition;
@@ -35,7 +35,7 @@ namespace Lilly
 
             listing.Begin(rect);
 
-            RWAutoSell_Patch.DoSettingsWindowContents(inRect, listing);
+            RWAutoSellLillyPatch.DoSettingsWindowContents(inRect, listing);
 
             listing.End();
             

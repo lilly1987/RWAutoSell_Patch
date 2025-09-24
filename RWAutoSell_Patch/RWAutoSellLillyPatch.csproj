@@ -7,8 +7,8 @@
     <ProjectGuid>{7D6C93C7-4446-4FC9-82D7-CB2C7A1CF413}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RWAutoSell_Patch</RootNamespace>
-    <AssemblyName>RWAutoSell_Patch</AssemblyName>
+    <RootNamespace>Lilly</RootNamespace>
+    <AssemblyName>RWAutoSellLillyPatch</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -79,10 +79,10 @@
   <ItemGroup>
     <Compile Include="MyHarmony.cs" />
     <Compile Include="MyLog.cs" />
-    <Compile Include="RWAutoSell_Patch.cs" />
+    <Compile Include="RWAutoSellLillyPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RWAutoSell_PatchUI.cs" />
-    <Compile Include="RWAutoSell_Settings.cs" />
+    <Compile Include="RWAutoSellLillyModUI.cs" />
+    <Compile Include="RWAutoSellLillySettings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
