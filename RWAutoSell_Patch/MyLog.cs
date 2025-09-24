@@ -16,7 +16,7 @@ namespace Lilly
 
         public static string MyText(string text, string memberName, int lineNumber, string className)
         {
-            return $"<color=#FFC0FFFF>Lilly</color> <color=#00FF00FF>{className}</color>.<color=#FF8000FF>{memberName}</color> <color=#00FFFFFF>{lineNumber}</color> - {text}";
+            return $"<color=#0000FFFF>Lilly</color> <color=#00FF00FF>{className}</color>.<color=#FF8000FF>{memberName}</color> <color=#00FFFFFF>{lineNumber}</color> - {text}";
         }
 
 
