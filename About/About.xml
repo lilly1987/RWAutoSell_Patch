@@ -27,7 +27,7 @@ AutoSeller https://steamcommunity.com/sharedfiles/filedetails/?id=1440321094 기
 		</li>
   </modDependencies>
 	<loadAfter>
-      <packageId>Supes.AutoSeller.Core</packageId>
-      <packageId>brrainz.harmony</packageId>
+      <li>Supes.AutoSeller.Core</li>
+      <li>brrainz.harmony</li>
 	</loadAfter>
 </ModMetaData>
