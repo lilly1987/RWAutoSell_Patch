@@ -28,11 +28,18 @@ namespace Lilly
             base.DoSettingsWindowContents(inRect);
 
             var rect = new Rect(0, 0, inRect.width - 16, 1000);
+            
             Widgets.BeginScrollView(inRect, ref scrollPosition, rect);
 
             Listing_Standard listing = new Listing_Standard();
 
-            RWAutoSell_Patch.DoSettingsWindowContents(rect, listing);
+            listing.Begin(rect);
+
+            RWAutoSell_Patch.DoSettingsWindowContents(inRect, listing);
+
+            listing.End();
+            
+            Widgets.EndScrollView();
         }
 
         public override string SettingsCategory()
