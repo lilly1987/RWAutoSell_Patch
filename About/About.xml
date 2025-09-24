@@ -11,11 +11,23 @@ AutoSeller https://steamcommunity.com/sharedfiles/filedetails/?id=1440321094 기
 신규 지도 생성시 자동으로 마지막 지도 규칙을 가져옴.
 거주지가 전부 날아가도, 마지막 지도 규칙을 임시보관해서, 신규 지도에 규칙을 삽입해줌.
 체인 규칙은 뭔지 몰라서 안가져옴.
+원본 모드에다가 패치하는거니 AutoSeller 모드가 있을것
 	</description>
 	<modVersion >1.0.0</modVersion>
+  <modDependencies>
+		<li>
+				<packageId>brrainz.harmony</packageId>
+				<displayName>Harmony</displayName>
+				<steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+		</li>
+		<li>
+				<packageId>Supes.AutoSeller.Core</packageId>
+				<displayName>Auto Seller</displayName>
+				<steamWorkshopUrl>steam://url/CommunityFilePage/1440321094</steamWorkshopUrl>
+		</li>
+  </modDependencies>
 	<loadAfter>
       <packageId>Supes.AutoSeller.Core</packageId>
       <packageId>brrainz.harmony</packageId>
-      <displayName>Harmony</displayName>
 	</loadAfter>
 </ModMetaData>
