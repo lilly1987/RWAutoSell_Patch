@@ -34,7 +34,7 @@ namespace Lilly
                 return;
             }
 
-            MyLog.Warning($"<color=#00FF00FF>Patch ST</color>");
+            MyLog.Message($"<color=#00FF00FF>Patch ST</color>");
             harmony = new MyHarmony(harmonyId);
 
             var patchType = typeof(RWAutoSellLillyPatch);
@@ -57,7 +57,7 @@ namespace Lilly
 
             harmony.PatchAll();
 
-            MyLog.Warning($"<color=#00FF00FF>Patch ED</color>");
+            MyLog.Message($"<color=#00FF00FF>Patch ED</color>");
             
         }
 
@@ -76,7 +76,7 @@ namespace Lilly
 
         public static IEnumerable<CodeInstruction> InitDiaTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            MyLog.Warning($"InitDiaTranspiler ST", print: onDebug, "00FF00FF");
+            MyLog.Message($"InitDiaTranspiler ST", print: onDebug, "00FF00FF");
 
             var codes = new List<CodeInstruction>(instructions);
             var newCodes = new List<CodeInstruction>();
@@ -108,7 +108,7 @@ namespace Lilly
                     foreach (var label in codes[i].labels)
                         codes[i + 10].labels.Add(label);
 
-                    MyLog.Warning($"InitDiaTranspiler Succ", print: onDebug, "00FF00FF");
+                    MyLog.Message($"InitDiaTranspiler Succ", print: onDebug, "00FF00FF");
 
                     i += 9; // 조건 블록 전체 건너뜀
                     continue;
@@ -118,7 +118,7 @@ namespace Lilly
             }
 
 
-            MyLog.Warning($"InitDiaTranspiler ED", print: onDebug, "00FF00FF");
+            MyLog.Message($"InitDiaTranspiler ED", print: onDebug, "00FF00FF");
 
             return newCodes;
         }
@@ -126,7 +126,7 @@ namespace Lilly
 
         public static IEnumerable<CodeInstruction> Transpiler1(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
-            MyLog.Warning($"<color=#00FF00FF>IsPlayerHome ST</color> {original.Name}", print: onDebug);
+            MyLog.Message($"<color=#00FF00FF>IsPlayerHome ST</color> {original.Name}", print: onDebug);
             var codes = new List<CodeInstruction>(instructions);
             var newCodes = new List<CodeInstruction>();
 
@@ -145,19 +145,19 @@ namespace Lilly
                 {                
                     i= i + 3; // IsPlayerHome 호출 이후로 건너뜀
 
-                    MyLog.Warning($"IsPlayerHome {original.Name} <color=#00FF00FF>succ</color>", print: onDebug);
+                    MyLog.Message($"IsPlayerHome {original.Name} <color=#00FF00FF>succ</color>", print: onDebug);
                     continue; // IsPlayerHome 호출 제거
                 }
                 newCodes.Add(codes[i]);
             }
 
-            MyLog.Warning($"<color=#00FF00FF>IsPlayerHome ED</color> {original.Name}", print: onDebug);
+            MyLog.Message($"<color=#00FF00FF>IsPlayerHome ED</color> {original.Name}", print: onDebug);
             return newCodes;
         }
         
         public static IEnumerable<CodeInstruction> MapTradablesTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            MyLog.Warning($"<color=#00FF00FF>IsPlayerHome2 ST</color>", print: onDebug);
+            MyLog.Message($"<color=#00FF00FF>IsPlayerHome2 ST</color>", print: onDebug);
 
             var codes = new List<CodeInstruction>(instructions);
             var newCodes = new List<CodeInstruction>();
@@ -181,19 +181,19 @@ namespace Lilly
 
                     i = i + 4; // IsPlayerHome 호출 이후로 건너뜀
 
-                    MyLog.Warning($"IsPlayerHome2 <color=#00FF00FF>succ</color>", print: onDebug,color: "00FF00FF");
+                    MyLog.Message($"IsPlayerHome2 <color=#00FF00FF>succ</color>", print: onDebug,color: "00FF00FF");
                     continue; // IsPlayerHome 호출 제거
                 }
                 newCodes.Add(codes[i]);
             }
 
-            MyLog.Warning($"<color=#00FF00FF>IsPlayerHome2 ED</color>", print: onDebug);
+            MyLog.Message($"<color=#00FF00FF>IsPlayerHome2 ED</color>", print: onDebug);
             return newCodes;
         }               
 
         public static IEnumerable<CodeInstruction> Transpiler3(IEnumerable<CodeInstruction> instructions)
         {
-            MyLog.Warning($"IsPlayerHome3 ST", print: onDebug);
+            MyLog.Message($"IsPlayerHome3 ST", print: onDebug);
             var codes = new List<CodeInstruction>(instructions);
             var newCodes = new List<CodeInstruction>();
 
@@ -210,13 +210,13 @@ namespace Lilly
                 {                
                     i= i + 2; // IsPlayerHome 호출 이후로 건너뜀
 
-                    MyLog.Warning($"IsPlayerHome3 <color=#00FF00FF>succ</color>", print: onDebug);
+                    MyLog.Message($"IsPlayerHome3 <color=#00FF00FF>succ</color>", print: onDebug);
                     continue; // IsPlayerHome 호출 제거
                 }
                 newCodes.Add(codes[i]);
             }
 
-            MyLog.Warning($"IsPlayerHome3 ED", print: onDebug);
+            MyLog.Message($"IsPlayerHome3 ED", print: onDebug);
             return newCodes;
         }
         
@@ -226,12 +226,12 @@ namespace Lilly
 
         public static void LoadGameFromSaveFileNowPatch()
         {
-            MyLog.Warning($"LoadGameFromSaveFileNow ST", print: onDebug);
+            MyLog.Message($"LoadGameFromSaveFileNow ST", print: onDebug);
 
             var aSMapComp = ASMapComp.GetSingleton(Find.CurrentMap);
             if (aSMapComp == null)
             {
-                MyLog.Error($"LoadGameFromSaveFileNow ASMapComp NULL");
+                MyLog.Warning($"LoadGameFromSaveFileNow ASMapComp NULL");
                 return;
             }
             ruleList.Clear();
@@ -239,25 +239,25 @@ namespace Lilly
             {
                 ruleList.Add(rule.DeepCopy());
             }
-            MyLog.Warning($"LoadGameFromSaveFileNow ED {aSMapComp.Rules.Count}", print: onDebug);
+            MyLog.Message($"LoadGameFromSaveFileNow ED {aSMapComp.Rules.Count}", print: onDebug);
         }        
 
         public static void MapGeneratedPostfix(ASMapComp __instance)
         {
-            MyLog.Warning($"MapGenerated ST", print: onDebug);
+            MyLog.Message($"MapGenerated ST", print: onDebug);
             if (!__instance.map.IsPlayerHome)
             {
                 ASMod.GetSingleton.mapComps.Add(__instance);
             }
             try
             {
-                MyLog.Warning($"map {__instance?.map}", print: onDebug);
-                MyLog.Warning($"Find.Maps.Count {Find.Maps?.Count} ", print: onDebug);
+                //MyLog.Warning($"map {__instance?.map}", print: onDebug);
+                //MyLog.Warning($"Find.Maps.Count {Find.Maps?.Count} ", print: onDebug);
 
                 var aSMapComp = __instance;
                 if (aSMapComp == null)
                 {
-                    MyLog.Error($"AddMap ASMapComp NULL");
+                    MyLog.Warning($"AddMap ASMapComp NULL");
                     return;
                 }
                 aSMapComp.ASAITog=true;
@@ -280,24 +280,24 @@ namespace Lilly
                         aSMapComp.Add(rule.DeepCopy());
                     }
                 }
-                MyLog.Warning($"aSMapComp.Rules.Count {aSMapComp.Rules.Count}", print: onDebug);
+                MyLog.Message($"aSMapComp.Rules.Count {aSMapComp.Rules.Count}", print: onDebug);
             }
             catch (Exception e)
             {
                 MyLog.Error(e.ToString());
             }
-            MyLog.Warning($"MapGenerated ED", print: onDebug);
+            MyLog.Message($"MapGenerated ED", print: onDebug);
         }
         
         public static void MapRemovedPrefix(ASMapComp __instance)
         {
+            MyLog.Message($"MapRemoved ST", print: onDebug);
             if (!__instance.map.IsPlayerHome)
             {
                 ASMod.GetSingleton.mapComps.Remove(__instance);
             }
             try
             {
-                MyLog.Warning($"MapRemoved ST", print: onDebug);
                 if (Find.Maps?.Count == 0)
                 {
                     ruleList.Clear();
@@ -306,33 +306,33 @@ namespace Lilly
                         ruleList.Add(rule.DeepCopy());
                     }
                 }
-                MyLog.Warning($"__instance.Rules.Count {__instance?.Rules?.Count}", print: onDebug);
+                MyLog.Message($"__instance.Rules.Count {__instance?.Rules?.Count}", print: onDebug);
             }
             catch (Exception e)
             {
                 MyLog.Error(e.ToString());
             }
-            MyLog.Warning($"MapRemoved ED", print: onDebug);
+            MyLog.Message($"MapRemoved ED", print: onDebug);
         }       
 
         public static void DeinitAndRemoveMapPatch(Map map)
         {
-            MyLog.Warning($"DeinitAndRemoveMap ST", print: onDebug);
+            MyLog.Message($"DeinitAndRemoveMap ST", print: onDebug);
             try
             {
-                MyLog.Warning($"map {map}", print: onDebug);
+                //MyLog.Warning($"map {map}", print: onDebug);
 
-                MyLog.Warning($"Find.Maps.Count {Find.Maps?.Count}", print: onDebug);
+                //MyLog.Warning($"Find.Maps.Count {Find.Maps?.Count}", print: onDebug);
 
                 if (Find.Maps?.Count > 0)
                 {
                     var aSMapComp = ASMapComp.GetSingleton(Find.CurrentMap);
                     if (aSMapComp == null)
                     {
-                        MyLog.Error($"DeinitAndRemoveMap ASMapComp NULL");
+                        MyLog.Warning($"DeinitAndRemoveMap ASMapComp NULL");
                         return;
                     }
-                    MyLog.Warning($"aSMapComp.Rules.Count  {aSMapComp.Rules.Count}", print: onDebug);
+                    MyLog.Message($"aSMapComp.Rules.Count  {aSMapComp.Rules.Count}", print: onDebug);
                     ruleList.Clear();
                     foreach (var rule in aSMapComp.EnumerateRules())
                     {
@@ -344,7 +344,7 @@ namespace Lilly
             {
                 MyLog.Error(e.ToString());
             }
-            MyLog.Warning($"DeinitAndRemoveMap ED", print: onDebug);
+            MyLog.Message($"DeinitAndRemoveMap ED", print: onDebug);
         }
         
 

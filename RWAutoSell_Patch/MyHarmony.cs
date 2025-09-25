@@ -53,7 +53,7 @@ namespace Lilly
                     transpiler: transpiler1,
                     finalizer: finalizer1
                 );
-                MyLog.Warning($"{Id}/{label}/Patch/<color=#00FF00FF>Succ</color>");
+                MyLog.Message($"{Id}/{label}/Patch/<color=#00FF00FF>Succ</color>");
             }
             catch (System.Exception e)
             {
@@ -89,7 +89,7 @@ namespace Lilly
             try
             {
                 base.PatchAll();
-                MyLog.Warning($"{Id} Patch Succ");
+                MyLog.Message($"{Id} Patch Succ");
             }
             catch (System.Exception e)
             {
@@ -104,7 +104,7 @@ namespace Lilly
             try
             {
                 action();
-                MyLog.Warning($"{Id} {label} action Succ");
+                MyLog.Message($"{Id} {label} action Succ");
             }
             catch (System.Exception e)
             {
