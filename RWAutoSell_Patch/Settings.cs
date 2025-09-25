@@ -1,13 +1,13 @@
 ﻿using Verse;
 
-namespace Lilly
+namespace Lilly.RWAutoSellPatch
 {
-    public class RWAutoSellLillySettings : ModSettings
+    public class Settings : ModSettings
     {
         public override void ExposeData()
         {
             base.ExposeData();
-            RWAutoSellLillyPatch.ExposeData();
+            ModPatch.ExposeData();
         }
     }
 }

@@ -10,15 +10,15 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
-namespace Lilly
+namespace Lilly.RWAutoSellPatch
 {
-    public class RWAutoSellLillyModUI : Mod
+    public class ModUI : Mod
     {
-        public static RWAutoSellLillySettings settings;
+        public static Settings settings;
 
-        public RWAutoSellLillyModUI(ModContentPack content) : base(content)
+        public ModUI(ModContentPack content) : base(content)
         {
-            settings = GetSettings<RWAutoSellLillySettings>();// 주의. MainSettings의 patch가 먼저 실행됨      
+            settings = GetSettings<Settings>();// 주의. MainSettings의 patch가 먼저 실행됨      
         }
 
         Vector2 scrollPosition;
@@ -35,7 +35,7 @@ namespace Lilly
 
             listing.Begin(rect);
 
-            RWAutoSellLillyPatch.DoSettingsWindowContents(inRect, listing);
+            ModPatch.DoSettingsWindowContents(inRect, listing);
 
             listing.End();
             

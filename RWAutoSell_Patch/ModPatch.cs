@@ -16,17 +16,17 @@ using UnityEngine;
 using Verse;
 using Verse.Noise;
 
-namespace Lilly
+namespace Lilly.RWAutoSellPatch
 {
     [StaticConstructorOnStartup]
-    public static class RWAutoSellLillyPatch
+    public static class ModPatch
     {
         public static string harmonyId = "Lilly.RWAutoSell";
         public static MyHarmony harmony;
         public static bool onDebug = true;
         public static bool ASAITog = true;
 
-        static RWAutoSellLillyPatch() 
+        static ModPatch() 
         {
             if (harmony != null)
             {
@@ -37,7 +37,7 @@ namespace Lilly
             MyLog.Message($"<color=#00FF00FF>Patch ST</color>");
             harmony = new MyHarmony(harmonyId);
 
-            var patchType = typeof(RWAutoSellLillyPatch);
+            var patchType = typeof(ModPatch);
             //MyHarmonyPatch("DeinitAndRemoveMapPatch", typeof(Game), "DeinitAndRemoveMap", prefix: "DeinitAndRemoveMapPatch");
             harmony.Patch("LoadGameFromSaveFileNow", typeof(SavedGameLoaderNow), "LoadGameFromSaveFileNow", patchType, postfix: "LoadGameFromSaveFileNowPatch");
             harmony.Patch("MapComponentTick", typeof(ASMapComp), "MapComponentTick", patchType, transpiler: "Transpiler1");
