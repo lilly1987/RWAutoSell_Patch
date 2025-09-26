@@ -18,6 +18,9 @@ using Verse.Noise;
 
 namespace Lilly.RWAutoSellPatch
 {
+    // MainTabWindow_AutoSell
+
+
     [StaticConstructorOnStartup]
     public static class ModPatch
     {
@@ -39,12 +42,14 @@ namespace Lilly.RWAutoSellPatch
 
             var patchType = typeof(ModPatch);
             //MyHarmonyPatch("DeinitAndRemoveMapPatch", typeof(Game), "DeinitAndRemoveMap", prefix: "DeinitAndRemoveMapPatch");
-            harmony.Patch("LoadGameFromSaveFileNow", typeof(SavedGameLoaderNow), "LoadGameFromSaveFileNow", patchType, postfix: "LoadGameFromSaveFileNowPatch");
-            harmony.Patch("MapComponentTick", typeof(ASMapComp), "MapComponentTick", patchType, transpiler: "Transpiler1");
-            harmony.Patch("MainTabWindow_AutoSell", typeof(MainTabWindow_AutoSell), "InitDia", patchType, transpiler: "InitDiaTranspiler");
-            harmony.Patch("MapGenerated", typeof(ASMapComp), "MapGenerated", patchType, postfix: "MapGeneratedPostfix", transpiler: "Transpiler1");
-            harmony.Patch("MapRemoved", typeof(ASMapComp), "MapRemoved", patchType, prefix: "MapRemovedPrefix", transpiler: "Transpiler1");
-            harmony.Patch("GetCount", typeof(FilterLowStack), "GetCount", patchType, transpiler: "Transpiler3", parameters: new Type[] { typeof(ThingDef), typeof(Map), typeof(bool) });
+            harmony.Patch("LoadGameFromSaveFileNow", typeof(SavedGameLoaderNow), "LoadGameFromSaveFileNow", patchType, postfix: nameof(LoadGameFromSaveFileNowPatch));
+            harmony.Patch("MapComponentTick", typeof(ASMapComp), "MapComponentTick", patchType, transpiler: nameof(UnCheckIsPlayerHome));
+            // 지도 제한 제거
+            harmony.Patch("MainTabWindow_AutoSell", typeof(MainTabWindow_AutoSell), "InitDia", patchType, transpiler: nameof(InitDiaTranspiler));
+            harmony.Patch("MapGenerated", typeof(ASMapComp), "MapGenerated", patchType, postfix: nameof(MapGeneratedPostfix), transpiler: nameof(UnCheckIsPlayerHome));
+            harmony.Patch("MapRemoved", typeof(ASMapComp), "MapRemoved", patchType, prefix: nameof(MapRemovedPrefix), transpiler: nameof(UnCheckIsPlayerHome));
+            harmony.Patch("GetCount", typeof(FilterLowStack), "GetCount", patchType, transpiler: nameof(UnCheckIsPlayerHome2), parameters: new Type[] { typeof(ThingDef), typeof(Map), typeof(bool) });
+            harmony.Patch("SpawnSetup", typeof(Pawn), "SpawnSetup", patchType, postfix: nameof(PawnSpawnSetup));
 /*            harmony.Patch("MapTradables", typeof(ASLibTransferUtility), "MapTradables", patchType, transpiler: "MapTradablesTranspiler", parameters: new Type[] {
                 typeof(Map),
                 typeof(bool),
@@ -74,6 +79,7 @@ namespace Lilly.RWAutoSellPatch
             listing.CheckboxLabeled($"ASAITog", ref ASAITog);
         }
 
+        // 지도 제한 제거
         public static IEnumerable<CodeInstruction> InitDiaTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             MyLog.Message($"InitDiaTranspiler ST", print: onDebug, "00FF00FF");
@@ -123,8 +129,8 @@ namespace Lilly.RWAutoSellPatch
             return newCodes;
         }
 
-
-        public static IEnumerable<CodeInstruction> Transpiler1(IEnumerable<CodeInstruction> instructions, MethodBase original)
+        // IsPlayerHome 조건 제거
+        public static IEnumerable<CodeInstruction> UnCheckIsPlayerHome(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
             MyLog.Message($"<color=#00FF00FF>IsPlayerHome ST</color> {original.Name}", print: onDebug);
             var codes = new List<CodeInstruction>(instructions);
@@ -154,7 +160,8 @@ namespace Lilly.RWAutoSellPatch
             MyLog.Message($"<color=#00FF00FF>IsPlayerHome ED</color> {original.Name}", print: onDebug);
             return newCodes;
         }
-        
+
+        // IsPlayerHome 조건 제거
         public static IEnumerable<CodeInstruction> MapTradablesTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             MyLog.Message($"<color=#00FF00FF>IsPlayerHome2 ST</color>", print: onDebug);
@@ -189,9 +196,10 @@ namespace Lilly.RWAutoSellPatch
 
             MyLog.Message($"<color=#00FF00FF>IsPlayerHome2 ED</color>", print: onDebug);
             return newCodes;
-        }               
+        }
 
-        public static IEnumerable<CodeInstruction> Transpiler3(IEnumerable<CodeInstruction> instructions)
+        // IsPlayerHome 조건 제거
+        public static IEnumerable<CodeInstruction> UnCheckIsPlayerHome2(IEnumerable<CodeInstruction> instructions)
         {
             MyLog.Message($"IsPlayerHome3 ST", print: onDebug);
             var codes = new List<CodeInstruction>(instructions);
@@ -224,6 +232,7 @@ namespace Lilly.RWAutoSellPatch
 
         public static Map tmpmap;
 
+        // 저장 불러오기 후 규칙 복원
         public static void LoadGameFromSaveFileNowPatch()
         {
             MyLog.Message($"LoadGameFromSaveFileNow ST", print: onDebug);
@@ -240,8 +249,9 @@ namespace Lilly.RWAutoSellPatch
                 ruleList.Add(rule.DeepCopy());
             }
             MyLog.Message($"LoadGameFromSaveFileNow ED {aSMapComp.Rules.Count}", print: onDebug);
-        }        
+        }
 
+        // 새 지도 생성 후 규칙 복원
         public static void MapGeneratedPostfix(ASMapComp __instance)
         {
             MyLog.Message($"MapGenerated ST", print: onDebug);
@@ -260,11 +270,18 @@ namespace Lilly.RWAutoSellPatch
                     MyLog.Warning($"AddMap ASMapComp NULL");
                     return;
                 }
+                // 자동 협상자 설정
                 aSMapComp.ASAITog=true;
-                foreach (Pawn pawn in __instance.map.mapPawns.FreeColonists)
-                {
-                    aSMapComp.SelectedNegogiators.Add(pawn.ThingID);
-                }
+
+                // 이시점엔 아직 폰 생성 안됨
+                //MyLog.Message($"map.mapPawns.FreeColonists.Count {__instance.map.mapPawns.FreeColonists.Count}", print: onDebug);
+                //foreach (Pawn pawn in __instance.map.mapPawns.FreeColonists)
+                //{
+                //    aSMapComp.SelectedNegogiators.Add(pawn.ThingID);
+                //}
+                //MyLog.Message($"SelectedNegogiators.Count {aSMapComp.SelectedNegogiators.Count}", print: onDebug);
+
+                // 규칙 복원
                 if (Find.Maps.Count == 1)
                 {
                     tmpmap = __instance.map;
@@ -286,6 +303,16 @@ namespace Lilly.RWAutoSellPatch
             {
                 MyLog.Error(e.ToString());
             }
+            //try
+            //{
+            //    // 규칙 복원
+
+            //    MyLog.Message($"aSMapComp.Rules.Count", print: onDebug);
+            //}
+            //catch (Exception e)
+            //{
+            //    MyLog.Error(e.ToString());
+            //}
             MyLog.Message($"MapGenerated ED", print: onDebug);
         }
         
@@ -346,7 +373,30 @@ namespace Lilly.RWAutoSellPatch
             }
             MyLog.Message($"DeinitAndRemoveMap ED", print: onDebug);
         }
-        
+
+        public static void PawnSpawnSetup(Pawn __instance, Map map)
+        {
+            if (__instance.Faction != null && __instance.Faction == Faction.OfPlayer)
+            {
+                MyLog.Message($"PawnSpawnSetup ST", print: onDebug);
+                try
+                {
+                    var aSMapComp = ASMapComp.GetSingleton(map);
+                    if (aSMapComp == null)
+                    {
+                        MyLog.Warning($"PawnSpawnSetup ASMapComp NULL");
+                        return;
+                    }
+                    aSMapComp.SelectedNegogiators.Add(__instance.ThingID);
+                    MyLog.Message($"PawnSpawnSetup Succ {__instance}");
+                }
+                catch (Exception e)
+                {
+                    MyLog.Error(e.ToString());
+                }
+                MyLog.Message($"PawnSpawnSetup ED", print: onDebug);
+            }
+        }
 
     }
 }
