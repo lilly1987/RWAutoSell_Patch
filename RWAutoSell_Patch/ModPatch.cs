@@ -68,8 +68,21 @@ namespace Lilly.RWAutoSellPatch
 
         public static void ExposeData()
         {
+            MyLog.ST();
+            MyLog.Message($"<color=#00FF00FF>{Scribe.mode}</color>");
             Scribe_Values.Look(ref onDebug, "onDebug", false);
-            Scribe_Values.Look(ref ASAITog, "ASAITog", true);
+            Scribe_Values.Look(ref ASAITog, "ASAITog", true); 
+            Scribe_Collections.Look(ref ruleListCpoy, "Rules", LookMode.Deep, new List<ASRule>());
+            if (ruleListCpoy == null)
+            {
+                MyLog.Warning("ruleListCpoy null");
+                ruleListCpoy = new List<ASRule>();
+            }
+            else if(Scribe.mode==LoadSaveMode.PostLoadInit)
+            {
+                MyLog.Warning($"ruleListCpoy {ruleListCpoy.Count}");
+            }
+            MyLog.ED();
         }
 
         public static void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
@@ -77,7 +90,45 @@ namespace Lilly.RWAutoSellPatch
             listing.GapLine();
             listing.CheckboxLabeled($"Debug", ref onDebug);
             listing.CheckboxLabeled($"ASAITog", ref ASAITog);
+            if(listing.ButtonText("목록 복사"))
+            {
+                if (Find.Maps?.Count > 0)
+                {
+                    var aSMapComp = ASMapComp.GetSingleton(Find.CurrentMap);
+                    if (aSMapComp == null)
+                    {
+                        MyLog.Warning($"DeinitAndRemoveMap ASMapComp NULL");
+                        return;
+                    }
+                    MyLog.Message($"copy aSMapComp.Rules.Count {aSMapComp.Rules.Count}", print: onDebug);
+                    ruleListCpoy.Clear();
+                    foreach (ASRule rule in aSMapComp.Rules)
+                    {
+                        ruleListCpoy.Add((ASRule)rule.DeepCopy());
+                    }
+                }
+            }
+            if (listing.ButtonText("목록 추가하기"))
+            {
+                if (Find.Maps?.Count > 0)
+                {
+                    var aSMapComp = ASMapComp.GetSingleton(Find.CurrentMap);
+                    if (aSMapComp == null)
+                    {
+                        MyLog.Warning($"DeinitAndRemoveMap ASMapComp NULL");
+                        return;
+                    }
+                    MyLog.Message($"paste aSMapComp.Rules.Count {aSMapComp.Rules.Count}", print: onDebug);
+                    
+                    foreach (ASRule rule in ruleListCpoy)
+                    {
+                        aSMapComp.Add(rule.DeepCopy());
+                    }
+                }
+            }
         }
+
+        public static List<ASRule> ruleListCpoy = new List<ASRule>();
 
         // 지도 제한 제거
         public static IEnumerable<CodeInstruction> InitDiaTranspiler(IEnumerable<CodeInstruction> instructions)

@@ -26,11 +26,11 @@ namespace Lilly
         }
 
         public static string MyText(
-            string text, 
-            string memberName, 
-            int lineNumber, 
+            string text,
+            string memberName,
+            int lineNumber,
             string className,
-            string color=null)
+            string color = null)
         {
             if (color != null)
             {
@@ -40,7 +40,7 @@ namespace Lilly
         }
 
         public static void Warning(string text,
-            bool print=true, string color = null,
+            bool print = true, string color = null,
             [CallerMemberName] string memberName = "",
             [CallerFilePath] string filePath = "",
             [CallerLineNumber] int lineNumber = 0
@@ -71,6 +71,49 @@ namespace Lilly
             if (!print) return;
             string className = System.IO.Path.GetFileNameWithoutExtension(filePath);
             Log.Message(MyText(text, memberName, lineNumber, className, color));
+
+        }
+
+        public static void SUCC(
+            bool print = true, string color = null,
+            [CallerMemberName] string memberName = "",
+            [CallerFilePath] string filePath = "",
+            [CallerLineNumber] int lineNumber = 0)
+        {
+            if (!print) return;
+            string className = System.IO.Path.GetFileNameWithoutExtension(filePath);
+            Log.Message(MyText("<color=#1abc9cFF>SUCC</color>", memberName, lineNumber, className, color));
+
+        }
+        public static void FAIL(
+            bool print = true, string color = null,
+            [CallerMemberName] string memberName = "",
+            [CallerFilePath] string filePath = "",
+            [CallerLineNumber] int lineNumber = 0)
+        {
+            if (!print) return;
+            string className = System.IO.Path.GetFileNameWithoutExtension(filePath);
+            Log.Error(MyText("<color=#ff5733FF>FAIL</color>", memberName, lineNumber, className, color));
+        }
+        public static void ST(
+            bool print = true, string color = null,
+            [CallerMemberName] string memberName = "",
+            [CallerFilePath] string filePath = "",
+            [CallerLineNumber] int lineNumber = 0)
+        {
+            if (!print) return;
+            string className = System.IO.Path.GetFileNameWithoutExtension(filePath);
+            Log.Error(MyText("<color=#138fe8FF>ST</color>", memberName, lineNumber, className, color));
+        }
+        public static void ED(
+            bool print = true, string color = null,
+            [CallerMemberName] string memberName = "",
+            [CallerFilePath] string filePath = "",
+            [CallerLineNumber] int lineNumber = 0)
+        {
+            if (!print) return;
+            string className = System.IO.Path.GetFileNameWithoutExtension(filePath);
+            Log.Error(MyText("<color=#138fe8FF>ST</color>", memberName, lineNumber, className, color));
         }
 
     }
