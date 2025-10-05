@@ -103,7 +103,7 @@ namespace Lilly
         {
             if (!print) return;
             string className = System.IO.Path.GetFileNameWithoutExtension(filePath);
-            Log.Error(MyText("<color=#138fe8FF>ST</color>", memberName, lineNumber, className, color));
+            Log.Message(MyText("<color=#138fe8FF>ST</color>", memberName, lineNumber, className, color));
         }
         public static void ED(
             bool print = true, string color = null,
@@ -113,7 +113,7 @@ namespace Lilly
         {
             if (!print) return;
             string className = System.IO.Path.GetFileNameWithoutExtension(filePath);
-            Log.Error(MyText("<color=#138fe8FF>ST</color>", memberName, lineNumber, className, color));
+            Log.Message(MyText("<color=#138fe8FF>ST</color>", memberName, lineNumber, className, color));
         }
 
     }

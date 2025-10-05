@@ -80,7 +80,7 @@ namespace Lilly.RWAutoSellPatch
             }
             else if(Scribe.mode==LoadSaveMode.PostLoadInit)
             {
-                MyLog.Warning($"ruleListCpoy {ruleListCpoy.Count}");
+                MyLog.Message($"ruleListCpoy {ruleListCpoy.Count}");
             }
             MyLog.ED();
         }
