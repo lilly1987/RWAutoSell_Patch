@@ -429,13 +429,13 @@ namespace Lilly.RWAutoSellPatch
         {
             if (__instance.Faction != null && __instance.Faction == Faction.OfPlayer)
             {
-                MyLog.Message($"PawnSpawnSetup ST", print: onDebug);
+                //MyLog.Message($"PawnSpawnSetup ST", print: onDebug);
                 try
                 {
                     var aSMapComp = ASMapComp.GetSingleton(map);
                     if (aSMapComp == null)
                     {
-                        MyLog.Warning($"PawnSpawnSetup ASMapComp NULL");
+                        MyLog.Warning($"PawnSpawnSetup ASMapComp NULL {__instance}");
                         return;
                     }
                     aSMapComp.SelectedNegogiators.Add(__instance.ThingID);
@@ -443,9 +443,10 @@ namespace Lilly.RWAutoSellPatch
                 }
                 catch (Exception e)
                 {
+                    MyLog.Error($"PawnSpawnSetup Exception {__instance}");
                     MyLog.Error(e.ToString());
                 }
-                MyLog.Message($"PawnSpawnSetup ED", print: onDebug);
+                //MyLog.Message($"PawnSpawnSetup ED", print: onDebug);
             }
         }
 
