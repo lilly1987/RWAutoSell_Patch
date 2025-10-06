@@ -108,7 +108,7 @@ namespace Lilly.RWAutoSellPatch
                     }
                 }
             }
-            if (listing.ButtonText("목록 추가하기"))
+            if (listing.ButtonText("목록 저장"))
             {
                 if (Find.Maps?.Count > 0)
                 {
