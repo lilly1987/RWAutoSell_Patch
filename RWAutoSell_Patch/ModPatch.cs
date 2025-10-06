@@ -90,7 +90,7 @@ namespace Lilly.RWAutoSellPatch
             listing.GapLine();
             listing.CheckboxLabeled($"Debug", ref onDebug);
             listing.CheckboxLabeled($"ASAITog", ref ASAITog);
-            if(listing.ButtonText("목록 복사"))
+            if(listing.ButtonText("목록 복사하기"))
             {
                 if (Find.Maps?.Count > 0)
                 {
@@ -108,7 +108,7 @@ namespace Lilly.RWAutoSellPatch
                     }
                 }
             }
-            if (listing.ButtonText("목록 저장"))
+            if (listing.ButtonText("목록 가져오기"))
             {
                 if (Find.Maps?.Count > 0)
                 {
